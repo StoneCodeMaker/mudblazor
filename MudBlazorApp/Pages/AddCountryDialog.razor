@@ -1,0 +1,64 @@
+@using MudBlazor
+@using MudBlazorApp.Models
+@inherits ComponentBase
+
+@* Dialog Content *@
+<MudText Typo="Typo.h6">Add New Country</MudText>
+<MudStack Spacing="2" Class="mt-4">
+    <MudNumericField T="int" Label="ID" @bind-Value="Id" Immediate="true" Variant="Variant.Outlined" />
+    <MudTextField Label="Name" @bind-Value="Name" Immediate="true" Variant="Variant.Outlined" />
+    <MudSwitch T="bool" @bind-Checked="Verified" Color="Color.Primary" />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+    }
+</MudStack>
+<MudStack Row Spacing="2" Class="mt-4" Justify="Justify.FlexEnd">
+    <MudButton Color="Color.Primary" OnClick="AddCountry">Save</MudButton>
+    <MudButton OnClick="Cancel">Cancel</MudButton>
+</MudStack>
+
+@code {
+    [CascadingParameter] MudBlazor.IDialogReference DialogReference { get; set; } = default!;
+    [Parameter] public List<int> ExistingIds { get; set; } = new();
+
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public bool Verified { get; set; } = false;
+    public string ErrorMessage { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        Id = ExistingIds.Any() ? ExistingIds.Max() + 1 : 1;
+    }
+
+    private void AddCountry()
+    {
+        ErrorMessage = string.Empty;
+        if (ExistingIds.Contains(Id))
+        {
+            ErrorMessage = $"ID {Id} already exists. Please choose a different ID.";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            ErrorMessage = "Name cannot be empty.";
+            return;
+        }
+        var newCountry = new CountryModel
+        {
+            Id = Id,
+            Name = Name,
+            Verified = Verified,
+            CreatedOn = DateTime.Now,
+            LastModified = DateTime.Now,
+            Mode = "Mock"
+        };
+        DialogReference.Close(DialogResult.Ok(newCountry));
+    }
+
+    private void Cancel()
+    {
+        DialogReference.Close(DialogResult.Cancel());
+    }
+} 

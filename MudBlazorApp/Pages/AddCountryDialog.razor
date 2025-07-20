@@ -2,20 +2,18 @@
 @using MudBlazorApp.Models
 @inherits ComponentBase
 
-@* Dialog Content *@
-<MudText Typo="Typo.h6">Add New Country</MudText>
-<MudStack Spacing="2" Class="mt-4">
+<MudStack Spacing="4" Class="pa-6">
     <MudNumericField T="int" Label="ID" @bind-Value="Id" Immediate="true" Variant="Variant.Outlined" />
     <MudTextField Label="Name" @bind-Value="Name" Immediate="true" Variant="Variant.Outlined" />
-    <MudSwitch T="bool" @bind-Checked="Verified" Color="Color.Primary" />
+    <MudSwitch T="bool" @bind-Checked="Verified" Color="Color.Primary" Label="Verified" />
     @if (!string.IsNullOrEmpty(ErrorMessage))
     {
         <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
     }
 </MudStack>
-<MudStack Row Spacing="2" Class="mt-4" Justify="Justify.FlexEnd">
-    <MudButton Color="Color.Primary" OnClick="AddCountry">Save</MudButton>
-    <MudButton OnClick="Cancel">Cancel</MudButton>
+<MudStack Row Spacing="3" Class="mt-4 pa-6" Justify="Justify.FlexEnd">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCountry">Save</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="Cancel">Cancel</MudButton>
 </MudStack>
 
 @code {
@@ -35,6 +33,10 @@
     private void AddCountry()
     {
         ErrorMessage = string.Empty;
+        
+        // Debug information
+        Console.WriteLine($"Adding country - ID: {Id}, Name: {Name}, Verified: {Verified}");
+        
         if (ExistingIds.Contains(Id))
         {
             ErrorMessage = $"ID {Id} already exists. Please choose a different ID.";
@@ -54,6 +56,8 @@
             LastModified = DateTime.Now,
             Mode = "Mock"
         };
+        
+        Console.WriteLine($"Created new country: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
         DialogReference.Close(DialogResult.Ok(newCountry));
     }
 

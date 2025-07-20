@@ -75,10 +75,14 @@ namespace MudBlazorApp.Pages
         {
             var parameters = new DialogParameters();
             parameters.Add("ExistingIds", _countries.Select(c => c.Id).ToList());
-            var dialog = DialogService.Show<AddCountryDialog>("Add New Country", parameters);
+            var dialog = await DialogService.ShowAsync<AddCountryDialog>("", parameters);
             var result = await dialog.Result;
+            
+            Console.WriteLine($"Dialog result - Canceled: {result.Canceled}, Data: {result.Data}");
+            
             if (!result.Canceled && result.Data is CountryModel newCountry)
             {
+                Console.WriteLine($"Adding new country to list: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
                 _countries.Add(newCountry);
                 Snackbar.Add($"New country added with ID {newCountry.Id}", Severity.Success);
                 StateHasChanged();

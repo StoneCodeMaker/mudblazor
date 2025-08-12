@@ -73,19 +73,45 @@ namespace MudBlazorApp.Pages
 
         public async Task OpenAddCountryDialog()
         {
-            var parameters = new DialogParameters();
-            parameters.Add("ExistingIds", _countries.Select(c => c.Id).ToList());
-            var dialog = await DialogService.ShowAsync<AddCountryDialog>("", parameters);
-            var result = await dialog.Result;
-            
-            Console.WriteLine($"Dialog result - Canceled: {result.Canceled}, Data: {result.Data}");
-            
-            if (!result.Canceled && result.Data is CountryModel newCountry)
+            try
             {
-                Console.WriteLine($"Adding new country to list: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
-                _countries.Add(newCountry);
-                Snackbar.Add($"New country added with ID {newCountry.Id}", Severity.Success);
-                StateHasChanged();
+                Console.WriteLine("OpenAddCountryDialog called");
+                var parameters = new DialogParameters();
+                parameters.Add("ExistingIds", _countries.Select(c => c.Id).ToList());
+                
+                Console.WriteLine("About to show dialog...");
+                var dialog = await DialogService.ShowAsync<AddCountryDialog>("", parameters);
+                Console.WriteLine("Dialog shown successfully");
+                
+                Console.WriteLine("Waiting for dialog result...");
+                var result = await dialog.Result;
+                
+                if (result is null)
+                {
+                    Console.WriteLine("Dialog returned a null result");
+                    Snackbar.Add("No result returned from dialog", Severity.Info);
+                    return;
+                }
+                
+                Console.WriteLine($"Dialog result - Canceled: {result.Canceled}, Data: {result.Data}");
+                
+                if (!result.Canceled && result.Data is CountryModel newCountry)
+                {
+                    Console.WriteLine($"Adding new country to list: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
+                    _countries.Add(newCountry);
+                    Snackbar.Add($"New country added with ID {newCountry.Id}", Severity.Success);
+                    StateHasChanged();
+                }
+                else
+                {
+                    Console.WriteLine("Dialog was canceled or no data returned");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OpenAddCountryDialog: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                Snackbar.Add($"Error opening dialog: {ex.Message}", Severity.Error);
             }
         }
 

@@ -112,3 +112,40 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* ---- Product Info page custom styles ---- */
+.info-card {
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.brand-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #6b3dbd; /* purple/indigo to match screenshot */
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    text-transform: lowercase;
+}
+
+.links-list .mud-list-item {
+    padding-left: 0;
+}
+
+.link-item {
+    color: #2f3a4a; /* dark slate */
+    font-size: 18px;
+}
+
+.link-item .mud-list-item-text {
+    font-weight: 500;
+}
+
+.external-icon {
+    font-size: 18px;
+    margin-left: 6px;
+}
+
+.text-muted {
+    color: #6b7280;
+}

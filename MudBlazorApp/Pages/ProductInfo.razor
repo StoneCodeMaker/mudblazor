@@ -1,0 +1,31 @@
+@page "/product-info"
+@using MudBlazor
+
+<PageTitle>Product Info</PageTitle>
+
+<MudPaper Class="pa-6">
+    <MudText Typo="Typo.subtitle1" Class="mb-2 text-muted">Additional Details</MudText>
+
+    <MudCard Class="info-card" Elevation="3">
+        <MudCardContent>
+            <MudText Class="brand-title">cencora</MudText>
+
+            <MudList T="string" Class="links-list" Dense="true">
+                <MudListItem T="string" Class="link-item" Href="https://example.com/prescribing-information" Target="_blank" Rel="noopener noreferrer" Icon="@Icons.Material.Filled.Description">
+                    Prescribing Information <MudIcon Icon="@Icons.Material.Filled.OpenInNew" Class="external-icon" />
+                </MudListItem>
+                <MudListItem T="string" Class="link-item" Href="https://example.com/patient-information" Target="_blank" Rel="noopener noreferrer" Icon="@Icons.Material.Filled.Info">
+                    Patient Information <MudIcon Icon="@Icons.Material.Filled.OpenInNew" Class="external-icon" />
+                </MudListItem>
+                <MudListItem T="string" Class="link-item" Href="https://example.com/medication-guide" Target="_blank" Rel="noopener noreferrer" Icon="@Icons.Material.Filled.Description">
+                    Medication Guide <MudIcon Icon="@Icons.Material.Filled.OpenInNew" Class="external-icon" />
+                </MudListItem>
+                <MudListItem T="string" Class="link-item" Href="https://example.com/instructions-for-use" Target="_blank" Rel="noopener noreferrer" Icon="@Icons.Material.Filled.Article">
+                    Instructions for Use <MudIcon Icon="@Icons.Material.Filled.OpenInNew" Class="external-icon" />
+                </MudListItem>
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+
+

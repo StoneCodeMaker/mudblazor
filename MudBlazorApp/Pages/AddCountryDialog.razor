@@ -12,8 +12,8 @@
     }
 </MudStack>
 <MudStack Row Spacing="3" Class="mt-4 pa-6" Justify="Justify.FlexEnd">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCountry">Save</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="Cancel">Cancel</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AddCountry())">Save</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="@(() => Cancel())">Cancel</MudButton>
 </MudStack>
 
 @code {
@@ -28,41 +28,66 @@
     protected override void OnInitialized()
     {
         Id = ExistingIds.Any() ? ExistingIds.Max() + 1 : 1;
+        Console.WriteLine($"Dialog initialized - DialogReference: {DialogReference != null}");
     }
 
     private void AddCountry()
     {
-        ErrorMessage = string.Empty;
-        
-        // Debug information
-        Console.WriteLine($"Adding country - ID: {Id}, Name: {Name}, Verified: {Verified}");
-        
-        if (ExistingIds.Contains(Id))
+        try
         {
-            ErrorMessage = $"ID {Id} already exists. Please choose a different ID.";
-            return;
+            Console.WriteLine("AddCountry method called");
+            ErrorMessage = string.Empty;
+            
+            Console.WriteLine($"Adding country - ID: {Id}, Name: {Name}, Verified: {Verified}");
+            Console.WriteLine($"DialogReference is null: {DialogReference == null}");
+            
+            if (ExistingIds.Contains(Id))
+            {
+                ErrorMessage = $"ID {Id} already exists. Please choose a different ID.";
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                ErrorMessage = "Name cannot be empty.";
+                return;
+            }
+            var newCountry = new CountryModel
+            {
+                Id = Id,
+                Name = Name,
+                Verified = Verified,
+                CreatedOn = DateTime.Now,
+                LastModified = DateTime.Now,
+                Mode = "Mock"
+            };
+            
+            Console.WriteLine($"Created new country: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
+            Console.WriteLine("About to close dialog...");
+            
+            DialogReference.Close(DialogResult.Ok(newCountry));
+            Console.WriteLine("Dialog closed successfully");
         }
-        if (string.IsNullOrWhiteSpace(Name))
+        catch (Exception ex)
         {
-            ErrorMessage = "Name cannot be empty.";
-            return;
+            Console.WriteLine($"Error in AddCountry: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            ErrorMessage = $"Error: {ex.Message}";
         }
-        var newCountry = new CountryModel
-        {
-            Id = Id,
-            Name = Name,
-            Verified = Verified,
-            CreatedOn = DateTime.Now,
-            LastModified = DateTime.Now,
-            Mode = "Mock"
-        };
-        
-        Console.WriteLine($"Created new country: {newCountry.Name} (ID: {newCountry.Id}, Verified: {newCountry.Verified})");
-        DialogReference.Close(DialogResult.Ok(newCountry));
     }
 
     private void Cancel()
     {
-        DialogReference.Close(DialogResult.Cancel());
+        try
+        {
+            Console.WriteLine("Cancel method called");
+            Console.WriteLine("Canceling dialog...");
+            DialogReference.Close(DialogResult.Cancel());
+            Console.WriteLine("Dialog canceled successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in Cancel: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        }
     }
 } 
